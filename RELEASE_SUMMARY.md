@@ -29,6 +29,9 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 - `build_artifacts/example_logs/03_generic_npy_custom_bands.txt`
 - `build_artifacts/example_logs/04_spatial_cv_splitters.txt`
 - `build_artifacts/example_logs/05_sklearn_pipeline_minimal.txt`
+- `build_artifacts/example_logs/06_real_mixed_resolution_planet_to_s2_ndvi.txt`
+- `build_artifacts/example_logs/07_real_sentinel1_vvvh_labelmap_spatial_cv.txt`
+- `build_artifacts/example_logs/08_real_s1slc_cvdl_complex_patches.txt`
 
 ## Build artifacts
 
@@ -46,14 +49,13 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 
 ## GitHub / PyPI status
 
-- GitHub push: not attempted (no remote configured in this repository)
+- GitHub remote: `https://github.com/ArnaBannonymus/asterra.git`
+- GitHub push: succeeded (`main`, `codex/v0.1.0`, and tag `v0.1.0`)
 - PyPI publish: not attempted (no credentials/trusted publishing configuration verified; network restricted)
 
 ### Next commands (when configured)
 
-- Add a GitHub remote and push:
-  - `git remote add origin <YOUR_REPO_URL>`
-  - `git push -u origin codex/v0.1.0`
+- Open a PR from `codex/v0.1.0` to `main` (optional; release is already on `main`).
 - Publish to PyPI (requires credentials or trusted publishing):
   - `python -m pip install -U twine`
   - `python -m twine upload build_artifacts/dist/*`
@@ -69,9 +71,3 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 - Add PEP 660 editable install support (or switch to a standard build backend once SPDX license-expression is widely
   supported by backends in your target environment).
 - Add CI (pytest + build) and coverage reporting.
-
-This file is generated as part of the end-to-end build workflow. It will be filled with:
-- version, modules, and API summary
-- tests executed and results
-- build artifacts captured
-- push/publish status and next steps
