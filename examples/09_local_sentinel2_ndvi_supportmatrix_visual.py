@@ -194,7 +194,15 @@ def main() -> None:
 
     nnz_per_row = np.diff(M.matrix.indptr).astype(int, copy=False)
     nnz_map = nnz_per_row.reshape(size, size)
-    row_sum = np.asarray(M.matrix.sum(axis=1)).ravel().reshape(size, size)
+    nnz_min = int(nnz_per_row.min())
+    nnz_median = int(np.median(nnz_per_row))
+    nnz_max = int(nnz_per_row.max())
+    off = int(np.sum(nnz_per_row != nnz_max))
+
+    row_sum = np.asarray(M.matrix.sum(axis=1)).ravel()
+    rs_min = float(row_sum.min())
+    rs_mean = float(row_sum.mean())
+    rs_max = float(row_sum.max())
 
     print("Inputs:")
     print("  s2_lr_ndvi:", args.s2_lr_ndvi)
@@ -210,13 +218,13 @@ def main() -> None:
     print("  nnz:", int(M.matrix.nnz))
     print(
         "  nnz/row: min=",
-        int(nnz_per_row.min()),
+        nnz_min,
         "median=",
-        int(np.median(nnz_per_row)),
+        nnz_median,
         "max=",
-        int(nnz_per_row.max()),
+        nnz_max,
     )
-    print("  row_sum: min=", float(row_sum.min()), "max=", float(row_sum.max()), "mean=", float(row_sum.mean()))
+    print("  row_sum: min=", rs_min, "max=", rs_max, "mean=", rs_mean)
     print("Projection quality (Planet NDVI -> S2 NDVI window):")
     print("  MAE:", mae)
     print("  RMSE:", rmse)
@@ -245,24 +253,70 @@ def main() -> None:
     ax.axis("off")
 
     ax = axes[1, 0]
-    im = ax.imshow(nnz_map, cmap="viridis")
-    ax.set_title("SupportMatrix nnz per target pixel")
-    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    im = ax.imshow(
+        nnz_map,
+        cmap="viridis",
+        vmin=float(nnz_min) - 0.5,
+        vmax=float(nnz_max) + 0.5,
+        interpolation="nearest",
+    )
+    ax.set_title(f"nnz/target (off={off})\nmin={nnz_min} med={nnz_median} max={nnz_max}")
+    fig.colorbar(
+        im,
+        ax=ax,
+        fraction=0.046,
+        pad=0.04,
+        ticks=list(range(nnz_min, nnz_max + 1)),
+    )
+    rr, cc = np.where(nnz_map != nnz_max)
+    if rr.size:
+        ax.scatter(cc, rr, s=6, c="black", marker=".", alpha=0.7)
     ax.axis("off")
 
     ax = axes[1, 1]
-    im = ax.imshow(row_sum, cmap="viridis", vmin=0.0, vmax=1.0)
-    ax.set_title("SupportMatrix row sum (normalize=True)")
-    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    ax.axis("off")
+    if (rs_max - rs_min) <= 1e-12:
+        pad = 1e-3
+        ax.bar(
+            [rs_mean],
+            [row_sum.size],
+            width=2.0 * pad,
+            color="tab:blue",
+            alpha=0.85,
+            edgecolor="white",
+        )
+        ax.set_xlim(rs_mean - 2.5 * pad, rs_mean + 2.5 * pad)
+    else:
+        pad = max(1e-6, 0.05 * (rs_max - rs_min))
+        ax.hist(
+            row_sum,
+            bins=25,
+            range=(rs_min - pad, rs_max + pad),
+            color="tab:blue",
+            alpha=0.85,
+            edgecolor="white",
+        )
+        ax.set_xlim(rs_min - pad, rs_max + pad)
+    ax.axvline(1.0, color="black", linewidth=1.0, linestyle="--", alpha=0.8)
+    ax.set_title(f"row sum (normalize=True)\nmin={rs_min:.6f} mean={rs_mean:.6f} max={rs_max:.6f}")
+    ax.set_xlabel("row sum")
+    ax.set_ylabel("count")
 
     ax = axes[1, 2]
-    r = int(max(1, min(args.spy_rows, M.matrix.shape[0])))
-    c = int(max(1, min(args.spy_cols, M.matrix.shape[1])))
-    ax.spy(M.matrix[:r, :c], markersize=0.5)
-    ax.set_title(f"Sparse pattern (top-left {r}×{c})")
-    ax.set_xlabel("source index")
-    ax.set_ylabel("target index")
+    rr_nz, cc_nz = M.matrix.nonzero()
+    bins_target = 128
+    bins_source = 256
+    H, _, _ = np.histogram2d(
+        rr_nz,
+        cc_nz,
+        bins=(bins_target, bins_source),
+        range=((0, M.matrix.shape[0]), (0, M.matrix.shape[1])),
+    )
+    dens = np.log10(1.0 + H)
+    im = ax.imshow(dens, cmap="magma", aspect="auto", origin="lower", interpolation="nearest")
+    ax.set_title(f"SupportMatrix nnz density (log10(1+count))\nshape={M.matrix.shape} nnz={int(M.matrix.nnz)}")
+    ax.set_xlabel("source bin")
+    ax.set_ylabel("target bin")
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
