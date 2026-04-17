@@ -87,7 +87,7 @@ support-aware operators on non-synthetic inputs:
 
 ![Sentinel-1 VV/VH and label map window](docs/assets/sentinel1_vv_vh_labelmap.png)
 
-**S1SLC_CVDL complex SAR patch example (HH/HV magnitudes)**
+**complex SAR patch example (HH/HV magnitudes)**
 
 ![CVDL complex SAR patch example](docs/assets/cvdl_hh_hv_patch.png)
 
