@@ -70,6 +70,39 @@ X_ps_on_s2 = M.project_features(e_ps.as_samples())
 print(X_ps_on_s2.shape)  # (32*32, 4)
 ```
 
+## Visual proofs (real data)
+
+Asterra is NumPy-first and does not ship heavy geospatial file I/O. For real GeoTIFF/SAFE/NetCDF products you
+typically read data with tools like `rasterio`/`xarray` and then construct `EOData` with a `BandSchema` and
+`SupportSpec`.
+
+The figures below are generated from **local** datasets (not included in this repo) to sanity-check the
+support-aware operators on real inputs:
+
+**Planet (3m PF-SR) NDVI → Sentinel-2 (10m) NDVI window (SupportMatrix overlap projection)**
+
+![Planet→Sentinel-2 NDVI projection sanity check](docs/assets/planet_to_s2_ndvi_window.png)
+
+**Sentinel-1 VV/VH window + label map (leakage-aware spatial CV demo data)**
+
+![Sentinel-1 VV/VH and label map window](docs/assets/sentinel1_vv_vh_labelmap.png)
+
+**S1SLC_CVDL complex SAR patch example (HH/HV magnitudes)**
+
+![CVDL complex SAR patch example](docs/assets/cvdl_hh_hv_patch.png)
+
+To regenerate these visuals on your machine (with your own file paths):
+
+```bash
+python scripts/generate_readme_visuals.py \
+  --planet-pf-sr /path/to/planet_pf_sr.tif \
+  --s2-lr-ndvi /path/to/s2_lr_ndvi.tif \
+  --s1-vv /path/to/s1_vv.tif \
+  --s1-vh /path/to/s1_vh.tif \
+  --label-map /path/to/label_map.tif \
+  --cvdl-city-dir /path/to/S1SLC_CVDL/City
+```
+
 ## Supported inputs
 
 - `.npy` arrays with shapes `(H, W, B)`, `(T, H, W, B)`, `(N, B)`
@@ -111,4 +144,3 @@ feedback and scientific validation.
 - richer support specifications (polygons/parcels via optional geo extras)
 - additional support-aware scorers and splitters
 - integration examples with real EO stacks (while keeping the core sensor-agnostic)
-
