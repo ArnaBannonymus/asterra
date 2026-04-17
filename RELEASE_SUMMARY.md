@@ -3,7 +3,7 @@
 ## Package
 
 - Name: `asterra`
-- Version: `0.1.1`
+- Version: `0.1.2`
 - Tagline: Support-aware machine learning for Earth observation
 - License: BSD-3-Clause (`LICENSE`, `license = "BSD-3-Clause"` in `pyproject.toml`)
 
@@ -37,9 +37,9 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 
 - Build command: `python -m build --outdir build_artifacts/dist`
 - Outputs:
-  - `build_artifacts/dist/asterra-0.1.1-py3-none-any.whl`
-  - `build_artifacts/dist/asterra-0.1.1.tar.gz`
-- Build log: `build_artifacts/build_logs/build_0.1.1.txt`
+  - `build_artifacts/dist/asterra-0.1.2-py3-none-any.whl`
+  - `build_artifacts/dist/asterra-0.1.2.tar.gz`
+- Build log: `build_artifacts/build_logs/build_0.1.2.txt`
 
 ## scikit-learn compatibility checks
 
@@ -51,15 +51,15 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 
 - GitHub remote: `https://github.com/ArnaBannonymus/asterra.git`
 - GitHub push: succeeded (`main`, `codex/v0.1.0`, and tag `v0.1.0`)
-- PyPI publish: attempted but failed (no credentials configured + DNS resolution failure); log captured in
-  `build_artifacts/twine/upload_0.1.1.txt`
+- PyPI publish: via GitHub Actions trusted publishing on tag push (`.github/workflows/release.yml`).
+  Status must be verified in GitHub Actions / PyPI for this environment.
 
 ### Next commands (when configured)
 
 - (Optional) Open a PR from `codex/v0.1.0` to `main`.
 - Configure PyPI trusted publishing for this GitHub repo, then push a release tag (workflow: `.github/workflows/release.yml`):
-  - `git tag -a v0.1.1 -m "asterra 0.1.1"`
-  - `git push origin v0.1.1`
+  - `git tag -a v0.1.2 -m "asterra 0.1.2"`
+  - `git push origin v0.1.2`
 
 ## Prepared for potential future upstreaming
 
