@@ -83,7 +83,7 @@ typically read data with tools like `rasterio`/`xarray` and then construct `EODa
 The figures below are generated from **local** datasets (not included in this repo) to sanity-check the
 support-aware operators on non-synthetic inputs:
 
-**Planet (3m PF-SR) NDVI → Sentinel-2 (10m) NDVI window (SupportMatrix overlap projection)**
+**Planet (3m PF-SR) NDVI → Sentinel-2 (10m) NDVI window (SupportMatrix overlap projection + sparse structure view)**
 
 ![Planet→Sentinel-2 NDVI projection sanity check](https://raw.githubusercontent.com/ArnaBannonymus/asterra/main/docs/assets/planet_to_s2_ndvi_window.png)
 

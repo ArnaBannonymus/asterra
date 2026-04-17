@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import argparse
+import os
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+
+os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "matplotlib"))
+os.environ.setdefault("XDG_CACHE_HOME", str(Path(tempfile.gettempdir()) / "xdg-cache"))
 
 try:
     import matplotlib.pyplot as plt
@@ -144,13 +149,14 @@ def plot_planet_to_s2_ndvi(
     mae = float(np.mean(np.abs(diff)))
     rmse = float(np.sqrt(np.mean(diff**2)))
     nnz_per_row = np.diff(M.matrix.indptr).reshape(size, size)
+    row_sum = np.asarray(M.matrix.sum(axis=1)).ravel().reshape(size, size)
 
-    vmin, vmax = _robust_vmin_vmax(lr)
+    vmin, vmax = _robust_vmin_vmax(np.stack([lr, proj], axis=0))
     dmax = float(np.nanpercentile(np.abs(diff), 98))
     if dmax == 0.0:
         dmax = float(np.max(np.abs(diff)) + 1e-6)
 
-    fig, axes = plt.subplots(2, 2, figsize=(10, 8), constrained_layout=True)
+    fig, axes = plt.subplots(2, 3, figsize=(13, 8), constrained_layout=True)
     ax = axes[0, 0]
     im = ax.imshow(lr, cmap="RdYlGn", vmin=vmin, vmax=vmax)
     ax.set_title("Sentinel-2 NDVI (10m window)")
@@ -163,17 +169,31 @@ def plot_planet_to_s2_ndvi(
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     ax.axis("off")
 
-    ax = axes[1, 0]
+    ax = axes[0, 2]
     im = ax.imshow(diff, cmap="coolwarm", vmin=-dmax, vmax=dmax)
     ax.set_title(f"Difference (MAE={mae:.4f}, RMSE={rmse:.4f})")
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     ax.axis("off")
 
-    ax = axes[1, 1]
+    ax = axes[1, 0]
     im = ax.imshow(nnz_per_row, cmap="viridis")
     ax.set_title("SupportMatrix nnz per target pixel")
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     ax.axis("off")
+
+    ax = axes[1, 1]
+    im = ax.imshow(row_sum, cmap="viridis", vmin=0.0, vmax=1.0)
+    ax.set_title("SupportMatrix row sum (normalize=True)")
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    ax.axis("off")
+
+    ax = axes[1, 2]
+    r = min(512, M.matrix.shape[0])
+    c = min(8000, M.matrix.shape[1])
+    ax.spy(M.matrix[:r, :c], markersize=0.5)
+    ax.set_title(f"Sparse pattern (top-left {r}×{c})")
+    ax.set_xlabel("source index")
+    ax.set_ylabel("target index")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.suptitle("Asterra local-dataset projection sanity check", y=1.02, fontsize=14)
