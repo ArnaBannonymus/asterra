@@ -25,4 +25,4 @@ Potential non-EO use cases:
 - `api_sketch.md`: an EO-free API sketch for a minimal generic subset
 - `extraction_notes.md`: what would need to change to make a standalone generic module
 - `draft_sklearn_discussion.md`: a draft discussion/issue text for scikit-learn
-
+- `draft_related_projects_entry.md`: a draft snippet for a scikit-learn “Related Projects” PR

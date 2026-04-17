@@ -41,6 +41,7 @@ See `upstream_candidate/` for:
 
 ## Draft plan for a future discussion
 
+0. (Optional) Submit a small docs-only PR to list Asterra under scikit-learn “Related Projects” (no core changes).
 1. Validate the sparse support operator APIs in Asterra across EO workflows.
 2. Identify a minimal generic subset (no sensor/geospatial assumptions).
 3. Prepare a standalone repository/module with tests and docs focused on generic use.
@@ -48,4 +49,3 @@ See `upstream_candidate/` for:
    - motivating examples beyond EO (group aggregation, coarse labeling, multi-resolution sampling)
    - estimator/check compatibility notes
    - performance considerations
-

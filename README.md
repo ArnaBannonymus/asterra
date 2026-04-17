@@ -31,13 +31,17 @@ The core abstraction is a sparse, overlap-based **`SupportMatrix`** that maps on
 ## Installation
 
 ```bash
-python -m pip install asterra
+# Once published to PyPI:
+# python -m pip install asterra
+
+# Install from source (GitHub):
+python -m pip install "asterra @ git+https://github.com/ArnaBannonymus/asterra.git@main"
 ```
 
 Optional geospatial extras (not required for pixel-space workflows):
 
 ```bash
-python -m pip install "asterra[geo]"
+python -m pip install "asterra[geo] @ git+https://github.com/ArnaBannonymus/asterra.git@main"
 ```
 
 ## Quickstart
@@ -81,15 +85,15 @@ support-aware operators on non-synthetic inputs:
 
 **Planet (3m PF-SR) NDVI → Sentinel-2 (10m) NDVI window (SupportMatrix overlap projection)**
 
-![Planet→Sentinel-2 NDVI projection sanity check](docs/assets/planet_to_s2_ndvi_window.png)
+![Planet→Sentinel-2 NDVI projection sanity check](https://raw.githubusercontent.com/ArnaBannonymus/asterra/main/docs/assets/planet_to_s2_ndvi_window.png)
 
 **Sentinel-1 VV/VH (dB) window + label map (leakage-aware spatial CV demo data)**
 
-![Sentinel-1 VV/VH and label map window](docs/assets/sentinel1_vv_vh_labelmap.png)
+![Sentinel-1 VV/VH and label map window](https://raw.githubusercontent.com/ArnaBannonymus/asterra/main/docs/assets/sentinel1_vv_vh_labelmap.png)
 
 **complex SAR patch example (HH/HV magnitudes)**
 
-![CVDL complex SAR patch example](docs/assets/cvdl_hh_hv_patch.png)
+![CVDL complex SAR patch example](https://raw.githubusercontent.com/ArnaBannonymus/asterra/main/docs/assets/cvdl_hh_hv_patch.png)
 
 To regenerate these visuals on your machine (with your own file paths):
 

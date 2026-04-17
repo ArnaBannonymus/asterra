@@ -18,8 +18,8 @@
 
 ## Tests
 
-- Command: `python -m pytest -q`
-- Result: PASS (see `build_artifacts/test_logs/pytest.txt`)
+- Command: `pytest -ra`
+- Result: PASS (see `build_artifacts/test_logs/pytest_0.1.1.txt`)
 
 ## Examples
 
@@ -39,7 +39,7 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 - Outputs:
   - `build_artifacts/dist/asterra-0.1.1-py3-none-any.whl`
   - `build_artifacts/dist/asterra-0.1.1.tar.gz`
-- Build log: `build_artifacts/build_logs/build.txt`
+- Build log: `build_artifacts/build_logs/build_0.1.1.txt`
 
 ## scikit-learn compatibility checks
 
@@ -50,15 +50,16 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 ## GitHub / PyPI status
 
 - GitHub remote: `https://github.com/ArnaBannonymus/asterra.git`
-- GitHub push: succeeded (`main`, `codex/v0.1.0`, and tags `v0.1.0`, `v0.1.1`)
-- PyPI publish: not attempted (no credentials/trusted publishing configuration verified; network restricted)
+- GitHub push: succeeded (`main`, `codex/v0.1.0`, and tag `v0.1.0`)
+- PyPI publish: attempted but failed (no credentials configured + DNS resolution failure); log captured in
+  `build_artifacts/twine/upload_0.1.1.txt`
 
 ### Next commands (when configured)
 
-- Open a PR from `codex/v0.1.0` to `main` (optional; release is already on `main`).
-- Publish to PyPI (requires credentials or trusted publishing):
-  - `python -m pip install -U twine`
-  - `python -m twine upload build_artifacts/dist/*`
+- (Optional) Open a PR from `codex/v0.1.0` to `main`.
+- Configure PyPI trusted publishing for this GitHub repo, then push a release tag (workflow: `.github/workflows/release.yml`):
+  - `git tag -a v0.1.1 -m "asterra 0.1.1"`
+  - `git push origin v0.1.1`
 
 ## Prepared for potential future upstreaming
 
@@ -70,4 +71,4 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 - Expand `SupportSpec` / overlap builders to support affine transforms and optional geospatial dependencies.
 - Add PEP 660 editable install support (or switch to a standard build backend once SPDX license-expression is widely
   supported by backends in your target environment).
-- Add CI (pytest + build) and coverage reporting.
+- Add coverage reporting and a small smoke test for the on-disk examples (kept optional).
