@@ -148,8 +148,15 @@ def plot_planet_to_s2_ndvi(
     diff = proj - lr
     mae = float(np.mean(np.abs(diff)))
     rmse = float(np.sqrt(np.mean(diff**2)))
-    nnz_per_row = np.diff(M.matrix.indptr).reshape(size, size)
+    nnz_per_row = np.diff(M.matrix.indptr).astype(int, copy=False).reshape(size, size)
+    nnz_min = int(np.min(nnz_per_row))
+    nnz_median = int(np.median(nnz_per_row))
+    nnz_max = int(np.max(nnz_per_row))
+
     row_sum = np.asarray(M.matrix.sum(axis=1)).ravel().reshape(size, size)
+    rs_min = float(np.min(row_sum))
+    rs_mean = float(np.mean(row_sum))
+    rs_max = float(np.max(row_sum))
 
     vmin, vmax = _robust_vmin_vmax(np.stack([lr, proj], axis=0))
     dmax = float(np.nanpercentile(np.abs(diff), 98))
@@ -176,24 +183,72 @@ def plot_planet_to_s2_ndvi(
     ax.axis("off")
 
     ax = axes[1, 0]
-    im = ax.imshow(nnz_per_row, cmap="viridis")
-    ax.set_title("SupportMatrix nnz per target pixel")
-    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    im = ax.imshow(
+        nnz_per_row,
+        cmap="viridis",
+        vmin=float(nnz_min) - 0.5,
+        vmax=float(nnz_max) + 0.5,
+        interpolation="nearest",
+    )
+    off = int(np.sum(nnz_per_row != nnz_max))
+    ax.set_title(f"nnz/target (off={off})\nmin={nnz_min} med={nnz_median} max={nnz_max}")
+    fig.colorbar(
+        im,
+        ax=ax,
+        fraction=0.046,
+        pad=0.04,
+        ticks=list(range(nnz_min, nnz_max + 1)),
+    )
+    rr, cc = np.where(nnz_per_row != nnz_max)
+    if rr.size:
+        ax.scatter(cc, rr, s=6, c="black", marker=".", alpha=0.7)
     ax.axis("off")
 
     ax = axes[1, 1]
-    im = ax.imshow(row_sum, cmap="viridis", vmin=0.0, vmax=1.0)
-    ax.set_title("SupportMatrix row sum (normalize=True)")
-    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    ax.axis("off")
+    flat = row_sum.ravel()
+    if (rs_max - rs_min) <= 1e-12:
+        pad = 1e-3
+        ax.bar(
+            [rs_mean],
+            [flat.size],
+            width=2.0 * pad,
+            color="tab:blue",
+            alpha=0.85,
+            edgecolor="white",
+        )
+        ax.set_xlim(rs_mean - 2.5 * pad, rs_mean + 2.5 * pad)
+    else:
+        pad = max(1e-6, 0.05 * (rs_max - rs_min))
+        ax.hist(
+            flat,
+            bins=25,
+            range=(rs_min - pad, rs_max + pad),
+            color="tab:blue",
+            alpha=0.85,
+            edgecolor="white",
+        )
+        ax.set_xlim(rs_min - pad, rs_max + pad)
+    ax.axvline(1.0, color="black", linewidth=1.0, linestyle="--", alpha=0.8)
+    ax.set_title(f"row sum (normalize=True)\nmin={rs_min:.6f} mean={rs_mean:.6f} max={rs_max:.6f}")
+    ax.set_xlabel("row sum")
+    ax.set_ylabel("count")
 
     ax = axes[1, 2]
-    r = min(512, M.matrix.shape[0])
-    c = min(8000, M.matrix.shape[1])
-    ax.spy(M.matrix[:r, :c], markersize=0.5)
-    ax.set_title(f"Sparse pattern (top-left {r}×{c})")
-    ax.set_xlabel("source index")
-    ax.set_ylabel("target index")
+    rr_nz, cc_nz = M.matrix.nonzero()
+    bins_target = 128
+    bins_source = 256
+    H, _, _ = np.histogram2d(
+        rr_nz,
+        cc_nz,
+        bins=(bins_target, bins_source),
+        range=((0, M.matrix.shape[0]), (0, M.matrix.shape[1])),
+    )
+    dens = np.log10(1.0 + H)
+    im = ax.imshow(dens, cmap="magma", aspect="auto", origin="lower", interpolation="nearest")
+    ax.set_title(f"SupportMatrix nnz density (log10(1+count))\nshape={M.matrix.shape} nnz={int(M.matrix.nnz)}")
+    ax.set_xlabel("source bin")
+    ax.set_ylabel("target bin")
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.suptitle("Asterra local-dataset projection sanity check", y=1.02, fontsize=14)
