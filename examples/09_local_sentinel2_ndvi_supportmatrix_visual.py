@@ -25,8 +25,29 @@ try:
 except ModuleNotFoundError as e:  # pragma: no cover
     raise SystemExit("This example requires rasterio. Install it and rerun (e.g. `conda install rasterio`).") from e
 
-from asterra.data import EOData, SupportSpec
-from asterra.support import SupportMatrix
+def _ensure_asterra_importable() -> None:
+    """Import asterra, assuming either an installed package or execution from repo root."""
+
+    try:
+        import asterra as _  # noqa: F401
+
+        return
+    except ModuleNotFoundError:
+        import sys
+
+        root = Path(__file__).resolve().parents[1]
+        src = root / "src"
+        if src.is_dir() and str(src) not in sys.path:
+            sys.path.insert(0, str(src))
+        try:
+            import asterra as _  # noqa: F401
+
+            return
+        except ModuleNotFoundError as e:
+            raise SystemExit(
+                "asterra is not importable. Install it (e.g. `python -m pip install asterra`) or run this example "
+                "from the source tree with `PYTHONPATH=src`."
+            ) from e
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,7 +61,9 @@ class WindowSpec:
         return Window(self.col_off, self.row_off, self.width, self.height)
 
 
-def _support_from_rasterio(ds: Any, *, window: Window) -> SupportSpec:
+def _support_from_rasterio(ds: Any, *, window: Window) -> "SupportSpec":
+    from asterra.data import SupportSpec
+
     win_transform = rasterio.windows.transform(window, ds.transform)
     dx, dy = ds.res
     origin = (float(win_transform.c), float(win_transform.f))
@@ -90,6 +113,10 @@ def _ndvi_from_planet_pf_sr(arr: np.ndarray) -> np.ndarray:
 
 
 def main() -> None:
+    _ensure_asterra_importable()
+    from asterra.data import EOData
+    from asterra.support import SupportMatrix
+
     parser = argparse.ArgumentParser(
         description=(
             "Sentinel-2 (NDVI GeoTIFF) demo with SupportMatrix visualization.\n\n"
