@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+*.so
+*.dylib
+*.dll
+
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+build/
+dist/
+*.egg-info/
+
+.venv/
+
+build_artifacts/
+
+# macOS AppleDouble
+._*

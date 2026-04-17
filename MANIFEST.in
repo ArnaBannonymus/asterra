@@ -1,0 +1,13 @@
+include LICENSE
+include README.md
+include CHANGELOG.md
+include CONTRIBUTING.md
+include TODO.md
+include DESIGN_BOUNDARIES.md
+include SKLEARN_COMPATIBILITY.md
+include UPSTREAMING.md
+include RELEASE_SUMMARY.md
+recursive-include docs *.md
+recursive-include examples *.py
+recursive-include tests *.py
+
