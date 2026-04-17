@@ -136,11 +136,11 @@ See `DESIGN_BOUNDARIES.md` and `UPSTREAMING.md` for boundary notes and candidate
 
 ## Release status
 
-`0.1.0` is the first public, focused release. The API is intentionally narrow and may evolve based on user
-feedback and scientific validation.
+`0.1.x` is an early, focused release line. The API is intentionally narrow and may evolve based on user feedback
+and scientific validation.
 
 ## Roadmap (high level)
 
 - richer support specifications (polygons/parcels via optional geo extras)
 - additional support-aware scorers and splitters
-- integration examples with real EO stacks (while keeping the core sensor-agnostic)
+- integration examples with local EO stacks (while keeping the core sensor-agnostic)

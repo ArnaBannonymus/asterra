@@ -3,7 +3,7 @@
 ## Package
 
 - Name: `asterra`
-- Version: `0.1.0`
+- Version: `0.1.1`
 - Tagline: Support-aware machine learning for Earth observation
 - License: BSD-3-Clause (`LICENSE`, `license = "BSD-3-Clause"` in `pyproject.toml`)
 
@@ -37,8 +37,8 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 
 - Build command: `python -m build --outdir build_artifacts/dist`
 - Outputs:
-  - `build_artifacts/dist/asterra-0.1.0-py3-none-any.whl`
-  - `build_artifacts/dist/asterra-0.1.0.tar.gz`
+  - `build_artifacts/dist/asterra-0.1.1-py3-none-any.whl`
+  - `build_artifacts/dist/asterra-0.1.1.tar.gz`
 - Build log: `build_artifacts/build_logs/build.txt`
 
 ## scikit-learn compatibility checks
@@ -50,7 +50,7 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 ## GitHub / PyPI status
 
 - GitHub remote: `https://github.com/ArnaBannonymus/asterra.git`
-- GitHub push: succeeded (`main`, `codex/v0.1.0`, and tag `v0.1.0`)
+- GitHub push: succeeded (`main`, `codex/v0.1.0`, and tags `v0.1.0`, `v0.1.1`)
 - PyPI publish: not attempted (no credentials/trusted publishing configuration verified; network restricted)
 
 ### Next commands (when configured)
