@@ -1,8 +1,77 @@
-# Release summary (to be finalized)
+# Release summary
+
+## Package
+
+- Name: `asterra`
+- Version: `0.1.0`
+- Tagline: Support-aware machine learning for Earth observation
+- License: BSD-3-Clause (`LICENSE`, `license = "BSD-3-Clause"` in `pyproject.toml`)
+
+## Implemented modules
+
+- `asterra.data`: `BandSchema`, `SupportSpec`, `EOData`
+- `asterra.support`: `SupportMatrix`, `SupportProjector`, `OverlapWeighter`, `MixedResolutionTransformer`
+- `asterra.io`: `.npy` loader + sensor presets (Sentinel-1/2, PlanetScope, NISAR-style SAR)
+- `asterra.model_selection`: `BufferedSpatialKFold`, `TileTimeGroupSplit`, leakage utilities
+- `asterra.metrics`: `SupportAwareRMSE`, `SupportAwareMAE`, `SupportAwareF1`
+- `asterra.preprocessing`: `FlattenGrid`, `MaskInvalid`, `BandSelector`
+
+## Tests
+
+- Command: `python -m pytest -q`
+- Result: PASS (see `build_artifacts/test_logs/pytest.txt`)
+
+## Examples
+
+Example outputs were generated with `PYTHONPATH=src` and saved to:
+- `build_artifacts/example_logs/01_mixed_resolution_s2_planetscope.txt`
+- `build_artifacts/example_logs/02_sentinel1_sar_vvvh.txt`
+- `build_artifacts/example_logs/03_generic_npy_custom_bands.txt`
+- `build_artifacts/example_logs/04_spatial_cv_splitters.txt`
+- `build_artifacts/example_logs/05_sklearn_pipeline_minimal.txt`
+
+## Build artifacts
+
+- Build command: `python -m build --outdir build_artifacts/dist`
+- Outputs:
+  - `build_artifacts/dist/asterra-0.1.0-py3-none-any.whl`
+  - `build_artifacts/dist/asterra-0.1.0.tar.gz`
+- Build log: `build_artifacts/build_logs/build.txt`
+
+## scikit-learn compatibility checks
+
+- Clone + pipeline smoke checks: OK
+- `check_estimator(...)` attempt: aborted with `SIGABRT` due to OpenMP runtime error; captured in
+  `build_artifacts/compatibility/sklearn_compat.txt`
+
+## GitHub / PyPI status
+
+- GitHub push: not attempted (no remote configured in this repository)
+- PyPI publish: not attempted (no credentials/trusted publishing configuration verified; network restricted)
+
+### Next commands (when configured)
+
+- Add a GitHub remote and push:
+  - `git remote add origin <YOUR_REPO_URL>`
+  - `git push -u origin codex/v0.1.0`
+- Publish to PyPI (requires credentials or trusted publishing):
+  - `python -m pip install -U twine`
+  - `python -m twine upload build_artifacts/dist/*`
+
+## Prepared for potential future upstreaming
+
+- `UPSTREAMING.md`, `DESIGN_BOUNDARIES.md`, and `upstream_candidate/` drafts document which components are EO-specific
+  vs potentially generic, and include a draft scikit-learn discussion text.
+
+## Recommended next improvements
+
+- Expand `SupportSpec` / overlap builders to support affine transforms and optional geospatial dependencies.
+- Add PEP 660 editable install support (or switch to a standard build backend once SPDX license-expression is widely
+  supported by backends in your target environment).
+- Add CI (pytest + build) and coverage reporting.
 
 This file is generated as part of the end-to-end build workflow. It will be filled with:
 - version, modules, and API summary
 - tests executed and results
 - build artifacts captured
 - push/publish status and next steps
-

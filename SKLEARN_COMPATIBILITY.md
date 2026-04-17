@@ -20,9 +20,18 @@ Asterra aims to be scikit-learn-compatible where appropriate. It is **not** part
 
 The test suite includes smoke tests that:
 - import and instantiate estimators
-- run `sklearn.utils.estimator_checks.check_estimator` on selected transformers where feasible
+- run clone/pipeline smoke checks on selected transformers
 
-Full compliance with every estimator check is not guaranteed for EO-first objects that accept `EOData` as `X`.
+### Notes (2026-04-17)
+
+- Clone smoke checks (`sklearn.base.clone`) passed for `MaskInvalid` and `FlattenGrid`.
+- A `Pipeline` smoke test passed for `MixedResolutionTransformer` + `Ridge`.
+- An attempted `check_estimator(...)` run in this environment aborted with `SIGABRT` due to an OpenMP runtime error
+  (`OMP: Error #179: Function Can't open SHM2 failed`). The attempt and stderr are captured in
+  `build_artifacts/compatibility/sklearn_compat.txt`.
+
+Full compliance with every estimator check is not guaranteed for EO-first objects that accept `EOData` as `X`, and
+some environments may require OpenMP configuration to run the full check suite.
 
 ## Deviations and rationale
 
@@ -35,4 +44,3 @@ Full compliance with every estimator check is not guaranteed for EO-first object
 
 Asterra is an external library. Any future scikit-learn inclusion would require separate design discussion and
 community review, and is not completed by this repository.
-
