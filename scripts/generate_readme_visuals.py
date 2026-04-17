@@ -166,7 +166,7 @@ def plot_planet_to_s2_ndvi(
     ax.axis("off")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.suptitle("Asterra real-data projection sanity check", y=1.02, fontsize=14)
+    fig.suptitle("Asterra local-dataset projection sanity check", y=1.02, fontsize=14)
     fig.savefig(out_path, dpi=160)
     plt.close(fig)
 
@@ -268,7 +268,7 @@ def plot_cvdl_patch(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate README visuals (real-data sanity checks).")
+    parser = argparse.ArgumentParser(description="Generate README visuals (local-dataset sanity checks).")
     parser.add_argument("--out-dir", type=Path, default=Path("docs/assets"))
 
     parser.add_argument("--planet-pf-sr", type=Path, required=True)
@@ -313,4 +313,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

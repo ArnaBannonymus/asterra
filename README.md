@@ -70,14 +70,14 @@ X_ps_on_s2 = M.project_features(e_ps.as_samples())
 print(X_ps_on_s2.shape)  # (32*32, 4)
 ```
 
-## Visual proofs (real data)
+## Visual proofs (local datasets)
 
-Asterra is NumPy-first and does not ship heavy geospatial file I/O. For real GeoTIFF/SAFE/NetCDF products you
+Asterra is NumPy-first and does not ship heavy geospatial file I/O. For GeoTIFF/SAFE/NetCDF products you
 typically read data with tools like `rasterio`/`xarray` and then construct `EOData` with a `BandSchema` and
 `SupportSpec`.
 
 The figures below are generated from **local** datasets (not included in this repo) to sanity-check the
-support-aware operators on real inputs:
+support-aware operators on non-synthetic inputs:
 
 **Planet (3m PF-SR) NDVI → Sentinel-2 (10m) NDVI window (SupportMatrix overlap projection)**
 
