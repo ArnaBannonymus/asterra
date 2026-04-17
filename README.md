@@ -83,7 +83,7 @@ support-aware operators on non-synthetic inputs:
 
 ![Planet→Sentinel-2 NDVI projection sanity check](docs/assets/planet_to_s2_ndvi_window.png)
 
-**Sentinel-1 VV/VH window + label map (leakage-aware spatial CV demo data)**
+**Sentinel-1 VV/VH (dB) window + label map (leakage-aware spatial CV demo data)**
 
 ![Sentinel-1 VV/VH and label map window](docs/assets/sentinel1_vv_vh_labelmap.png)
 

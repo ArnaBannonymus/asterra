@@ -80,6 +80,16 @@ def _robust_vmin_vmax(x: np.ndarray, p_lo: float = 2.0, p_hi: float = 98.0) -> t
     return lo, hi
 
 
+def _to_db(x: np.ndarray, *, eps: float = 1e-8) -> np.ndarray:
+    """Convert a nonnegative backscatter-like array to decibels.
+
+    Assumes `x` is in linear scale (e.g., sigma0). Values <= 0 are clipped to `eps`.
+    """
+
+    arr = np.asarray(x, dtype="float32", order="C")
+    return (10.0 * np.log10(np.clip(arr, float(eps), None))).astype("float32", copy=False)
+
+
 def _ndvi_from_planet_pf_sr(arr: np.ndarray) -> np.ndarray:
     """Compute NDVI from Planet PF-SR 4-band imagery (assumed order: B, G, R, NIR)."""
 
@@ -191,27 +201,53 @@ def plot_sentinel1_vv_vh_labels(
             raise ValueError("Input rasters must be on the same grid (transform mismatch).")
 
         size = int(window_size)
-        row_off = max(0, (ds_vv.height - size) // 2)
-        col_off = max(0, (ds_vv.width - size) // 2)
-        win = WindowSpec(row_off=row_off, col_off=col_off, height=size, width=size).to_window()
+        size = int(min(size, ds_vv.height, ds_vv.width))
+        if size <= 0:
+            raise ValueError(f"window_size must be positive. Got {window_size}.")
+
+        # Pick a window with strong texture/contrast so the SAR layers look like SAR.
+        max_row_off = max(0, int(ds_vv.height - size))
+        max_col_off = max(0, int(ds_vv.width - size))
+        row_offsets = np.unique(np.linspace(0, max_row_off, num=min(5, max_row_off + 1)).round().astype(int))
+        col_offsets = np.unique(np.linspace(0, max_col_off, num=min(5, max_col_off + 1)).round().astype(int))
+        best_score = -np.inf
+        best_row_off, best_col_off = 0, 0
+        for row_off in row_offsets:
+            for col_off in col_offsets:
+                win0 = WindowSpec(
+                    row_off=int(row_off),
+                    col_off=int(col_off),
+                    height=size,
+                    width=size,
+                ).to_window()
+                vv0 = ds_vv.read(1, window=win0).astype("float32", copy=False)
+                score = float(np.nanstd(_to_db(vv0)))
+                if np.isfinite(score) and score > best_score:
+                    best_score = score
+                    best_row_off, best_col_off = int(row_off), int(col_off)
+
+        win = WindowSpec(row_off=best_row_off, col_off=best_col_off, height=size, width=size).to_window()
 
         vv = ds_vv.read(1, window=win).astype("float32", copy=False)
         vh = ds_vh.read(1, window=win).astype("float32", copy=False)
         y = ds_y.read(1, window=win).astype("int32", copy=False)
 
-    vv_lo, vv_hi = _robust_vmin_vmax(vv)
-    vh_lo, vh_hi = _robust_vmin_vmax(vh)
+    vv_db = _to_db(vv)
+    vh_db = _to_db(vh)
+
+    vv_lo, vv_hi = _robust_vmin_vmax(vv_db)
+    vh_lo, vh_hi = _robust_vmin_vmax(vh_db)
 
     fig, axes = plt.subplots(1, 3, figsize=(12, 4), constrained_layout=True)
     ax = axes[0]
-    im = ax.imshow(vv, cmap="gray", vmin=vv_lo, vmax=vv_hi)
-    ax.set_title("Sentinel-1 VV (window)")
+    im = ax.imshow(vv_db, cmap="gray", vmin=vv_lo, vmax=vv_hi)
+    ax.set_title("Sentinel-1 VV (dB)")
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     ax.axis("off")
 
     ax = axes[1]
-    im = ax.imshow(vh, cmap="gray", vmin=vh_lo, vmax=vh_hi)
-    ax.set_title("Sentinel-1 VH (window)")
+    im = ax.imshow(vh_db, cmap="gray", vmin=vh_lo, vmax=vh_hi)
+    ax.set_title("Sentinel-1 VH (dB)")
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     ax.axis("off")
 
