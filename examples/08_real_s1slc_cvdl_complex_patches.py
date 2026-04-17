@@ -54,7 +54,7 @@ def _extract_patch_features(hh: np.ndarray, hv: np.ndarray, *, batch_size: int =
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Example using a real S1SLC_CVDL complex patch dataset:\n"
+            "Example using an on-disk S1SLC_CVDL complex patch dataset:\n"
             "- loads HH/HV complex patch stacks (memmap)\n"
             "- extracts simple per-patch features\n"
             "- trains a lightweight classifier\n\n"
@@ -113,4 +113,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

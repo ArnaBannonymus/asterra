@@ -68,7 +68,7 @@ def ndvi_from_planet_pf_sr(arr: np.ndarray) -> np.ndarray:
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Mixed-resolution example using real GeoTIFFs:\n"
+            "Mixed-resolution example using local GeoTIFFs:\n"
             "- Planet PF-SR (3m, 4-band)\n"
             "- Sentinel-2 NDVI (10m, 1-band)\n\n"
             "The example reads a small spatial window, computes NDVI at 3m, then projects it onto the 10m grid "
@@ -147,4 +147,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
