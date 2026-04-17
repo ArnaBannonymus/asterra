@@ -85,15 +85,15 @@ support-aware operators on non-synthetic inputs:
 
 **Planet (3m PF-SR) NDVI → Sentinel-2 (10m) NDVI window (SupportMatrix overlap projection + sparse structure view)**
 
-![Planet→Sentinel-2 NDVI projection sanity check](https://raw.githubusercontent.com/ArnaBannonymus/asterra/v0.1.2/docs/assets/planet_to_s2_ndvi_window.png)
+![Planet→Sentinel-2 NDVI projection sanity check](https://raw.githubusercontent.com/ArnaBannonymus/asterra/v0.1.3/docs/assets/planet_to_s2_ndvi_window.png)
 
 **Sentinel-1 VV/VH (dB) window + label map (leakage-aware spatial CV demo data)**
 
-![Sentinel-1 VV/VH and label map window](https://raw.githubusercontent.com/ArnaBannonymus/asterra/v0.1.2/docs/assets/sentinel1_vv_vh_labelmap.png)
+![Sentinel-1 VV/VH and label map window](https://raw.githubusercontent.com/ArnaBannonymus/asterra/v0.1.3/docs/assets/sentinel1_vv_vh_labelmap.png)
 
 **complex SAR patch example (HH/HV magnitudes)**
 
-![CVDL complex SAR patch example](https://raw.githubusercontent.com/ArnaBannonymus/asterra/v0.1.2/docs/assets/cvdl_hh_hv_patch.png)
+![CVDL complex SAR patch example](https://raw.githubusercontent.com/ArnaBannonymus/asterra/v0.1.3/docs/assets/cvdl_hh_hv_patch.png)
 
 To regenerate these visuals on your machine (with your own file paths):
 

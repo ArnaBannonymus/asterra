@@ -3,7 +3,7 @@
 ## Package
 
 - Name: `asterra`
-- Version: `0.1.2`
+- Version: `0.1.3`
 - Tagline: Support-aware machine learning for Earth observation
 - License: BSD-3-Clause (`LICENSE`, `license = "BSD-3-Clause"` in `pyproject.toml`)
 
@@ -19,7 +19,7 @@
 ## Tests
 
 - Command: `pytest -ra`
-- Result: PASS (see `build_artifacts/test_logs/pytest_0.1.1.txt`)
+- Result: PASS (see `build_artifacts/test_logs/pytest_0.1.3.txt`)
 
 ## Examples
 
@@ -37,9 +37,9 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 
 - Build command: `python -m build --outdir build_artifacts/dist`
 - Outputs:
-  - `build_artifacts/dist/asterra-0.1.2-py3-none-any.whl`
-  - `build_artifacts/dist/asterra-0.1.2.tar.gz`
-- Build log: `build_artifacts/build_logs/build_0.1.2.txt`
+  - `build_artifacts/dist/asterra-0.1.3-py3-none-any.whl`
+  - `build_artifacts/dist/asterra-0.1.3.tar.gz`
+- Build log: `build_artifacts/build_logs/build_0.1.3.txt`
 
 ## scikit-learn compatibility checks
 
@@ -58,8 +58,8 @@ Example outputs were generated with `PYTHONPATH=src` and saved to:
 
 - (Optional) Open a PR from `codex/v0.1.0` to `main`.
 - Configure PyPI trusted publishing for this GitHub repo, then push a release tag (workflow: `.github/workflows/release.yml`):
-  - `git tag -a v0.1.2 -m "asterra 0.1.2"`
-  - `git push origin v0.1.2`
+  - `git tag -a v0.1.3 -m "asterra 0.1.3"`
+  - `git push origin v0.1.3`
 
 ## Prepared for potential future upstreaming
 

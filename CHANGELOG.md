@@ -28,3 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 - A runnable Sentinel-2 NDVI demo with SupportMatrix visualization (`examples/09_local_sentinel2_ndvi_supportmatrix_visual.py`).
+
+## [0.1.3] - 2026-04-17
+
+### Fixed
+- README visual asset URLs are pinned to the release tag to avoid stale CDN/browser caching.

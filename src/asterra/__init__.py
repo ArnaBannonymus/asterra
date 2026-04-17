@@ -10,7 +10,7 @@ __all__ = [
     "SupportMatrix",
 ]
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 from .data.bands import BandSchema
 from .data.eodata import EOData
